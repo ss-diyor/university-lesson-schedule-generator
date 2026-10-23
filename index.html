@@ -1,4 +1,4 @@
-html_code = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
@@ -45,9 +45,9 @@ html_code = """<!DOCTYPE html>
 
         /* Asosiy jadval maydoni (Rasmga tushadigan qism) */
         .capture-area {
-            background-color: #f0f4f8;
+            background-color: #f0f4f8; /* Rasmdagi orqa fon rangi */
             padding: 40px;
-            width: 1200px;
+            width: 1200px; /* Kenglik rasmdagidek keng bo'lishi uchun */
             box-sizing: border-box;
         }
 
@@ -84,7 +84,7 @@ html_code = """<!DOCTYPE html>
             padding: 16px;
             text-align: left;
             vertical-align: top;
-            width: calc(100% / 8);
+            width: calc(100% / 8); /* 8 ta ustun teng taqsimlanadi */
         }
 
         th {
@@ -110,6 +110,7 @@ html_code = """<!DOCTYPE html>
             background: #f8fafc;
         }
 
+        /* Katak ichidagi matn stillari */
         .subject {
             font-weight: 600;
             font-size: 13px;
@@ -134,6 +135,7 @@ html_code = """<!DOCTYPE html>
             font-size: 13px;
         }
 
+        /* Tahrirlash Modali */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -170,7 +172,9 @@ html_code = """<!DOCTYPE html>
         <button class="btn-download" onclick="downloadPNG()">↓ PNG formatida yuklab olish</button>
     </div>
 
+    <!-- Shu qism rasmga olinadi -->
     <div id="capture-area" class="capture-area">
+        <!-- Guruh nomini to'g'ridan-to'g'ri ustiga bosib tahrirlash mumkin -->
         <h1 class="header-title" contenteditable="true" spellcheck="false">XTA-26/5</h1>
         <h2 class="header-subtitle">HAFTALIK DARS JADVALI</h2>
 
@@ -188,10 +192,12 @@ html_code = """<!DOCTYPE html>
                 </tr>
             </thead>
             <tbody id="schedule-body">
+                <!-- Javascript orqali to'ldiriladi -->
             </tbody>
         </table>
     </div>
 
+    <!-- Tahrirlash oynasi (Modal) -->
     <div class="modal-overlay" id="modal">
         <div class="modal">
             <h3>Darsni kiritish</h3>
@@ -221,9 +227,11 @@ html_code = """<!DOCTYPE html>
 
     <script>
         const times = ['09:00 - 10:20', '10:30 - 11:50', '12:10 - 13:30', '13:40 - 15:00', '15:10 - 16:30'];
+        // 5 qator, 7 kun uchun bo'sh massiv yaratish
         let scheduleData = Array(5).fill().map(() => Array(7).fill(null));
         let currentRow = -1, currentCol = -1;
 
+        // Jadvalni chizish funksiyasi
         function renderTable() {
             const tbody = document.getElementById('schedule-body');
             tbody.innerHTML = '';
@@ -231,11 +239,13 @@ html_code = """<!DOCTYPE html>
             for (let i = 0; i < 5; i++) {
                 const tr = document.createElement('tr');
                 
+                // Juftlik ustuni
                 const tdJuftlik = document.createElement('td');
                 tdJuftlik.className = 'juftlik-col';
                 tdJuftlik.textContent = `${i + 1}-juftlik`;
                 tr.appendChild(tdJuftlik);
 
+                // Kunlar ustunlari
                 for (let j = 0; j < 7; j++) {
                     const td = document.createElement('td');
                     td.className = 'editable-cell';
@@ -259,6 +269,7 @@ html_code = """<!DOCTYPE html>
             }
         }
 
+        // Modalni ochish
         function openModal(r, c) {
             currentRow = r;
             currentCol = c;
@@ -272,10 +283,12 @@ html_code = """<!DOCTYPE html>
             document.getElementById('modal').style.display = 'flex';
         }
 
+        // Modalni yopish
         function closeModal() {
             document.getElementById('modal').style.display = 'none';
         }
 
+        // Kiritilgan ma'lumotni saqlash
         function saveCell() {
             const subject = document.getElementById('m-subject').value.trim();
             if (subject) {
@@ -292,12 +305,14 @@ html_code = """<!DOCTYPE html>
             renderTable();
         }
 
+        // Katakni tozalash
         function clearCell() {
             scheduleData[currentRow][currentCol] = null;
             closeModal();
             renderTable();
         }
 
+        // Rasmga yuklab olish funksiyasi (html2canvas yordamida)
         function downloadPNG() {
             const captureArea = document.getElementById('capture-area');
             const downloadBtn = document.querySelector('.btn-download');
@@ -306,11 +321,12 @@ html_code = """<!DOCTYPE html>
             downloadBtn.style.opacity = '0.7';
 
             html2canvas(captureArea, {
-                scale: 2,
+                scale: 2, // Yuqori sifat (HD) uchun
                 backgroundColor: '#f0f4f8',
                 useCORS: true
             }).then(canvas => {
                 const link = document.createElement('a');
+                // Fayl nomi sifatida sarlavhadagi guruh nomini olish
                 const groupName = document.querySelector('.header-title').innerText.replace(/[^a-zA-Z0-9-]/g, '_');
                 link.download = `${groupName}_dars_jadvali.png`;
                 link.href = canvas.toDataURL('image/png');
@@ -321,11 +337,8 @@ html_code = """<!DOCTYPE html>
             });
         }
 
+        // Dastlab sahifa yuklanganda jadvalni chizish
         window.onload = renderTable;
     </script>
 </body>
 </html>
-"""
-
-with open('index.html', 'w', encoding='utf-8') as f:
-    f.write(html_code)
