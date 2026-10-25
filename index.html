@@ -23,7 +23,41 @@
         .toolbar {
             margin-bottom: 20px;
             display: flex;
-            gap: 15px;
+            gap: 20px;
+            align-items: flex-end;
+            background: #ffffff;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            width: 1200px;
+            box-sizing: border-box;
+        }
+
+        .group-input-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .group-input-wrapper label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .group-input-wrapper input {
+            padding: 10px 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            width: 250px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .group-input-wrapper input:focus {
+            border-color: #3b82f6;
         }
 
         .btn-download {
@@ -37,6 +71,7 @@
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
             transition: 0.2s;
+            margin-left: auto;
         }
 
         .btn-download:hover {
@@ -45,10 +80,11 @@
 
         /* Asosiy jadval maydoni (Rasmga tushadigan qism) */
         .capture-area {
-            background-color: #f0f4f8; /* Rasmdagi orqa fon rangi */
+            background-color: #f0f4f8;
             padding: 40px;
-            width: 1200px; /* Kenglik rasmdagidek keng bo'lishi uchun */
+            width: 1200px;
             box-sizing: border-box;
+            border-radius: 8px;
         }
 
         .header-title {
@@ -56,12 +92,6 @@
             font-weight: 700;
             color: #1e293b;
             margin: 0 0 5px 0;
-            outline: none;
-            border-bottom: 1px dashed transparent;
-        }
-
-        .header-title:focus {
-            border-bottom: 1px dashed #94a3b8;
         }
 
         .header-subtitle {
@@ -84,7 +114,7 @@
             padding: 16px;
             text-align: left;
             vertical-align: top;
-            width: calc(100% / 8); /* 8 ta ustun teng taqsimlanadi */
+            width: calc(100% / 8);
         }
 
         th {
@@ -110,7 +140,6 @@
             background: #f8fafc;
         }
 
-        /* Katak ichidagi matn stillari */
         .subject {
             font-weight: 600;
             font-size: 13px;
@@ -168,14 +197,18 @@
 </head>
 <body>
 
+    <!-- Yuqoridagi boshqaruv paneli -->
     <div class="toolbar">
+        <div class="group-input-wrapper">
+            <label for="group-name-input">Guruh nomini kiriting:</label>
+            <input type="text" id="group-name-input" value="XTA-26/5" oninput="document.getElementById('group-title').innerText = this.value || 'Guruh nomi'">
+        </div>
         <button class="btn-download" onclick="downloadPNG()">↓ PNG formatida yuklab olish</button>
     </div>
 
     <!-- Shu qism rasmga olinadi -->
     <div id="capture-area" class="capture-area">
-        <!-- Guruh nomini to'g'ridan-to'g'ri ustiga bosib tahrirlash mumkin -->
-        <h1 class="header-title" contenteditable="true" spellcheck="false">XTA-26/5</h1>
+        <h1 class="header-title" id="group-title">XTA-26/5</h1>
         <h2 class="header-subtitle">HAFTALIK DARS JADVALI</h2>
 
         <table>
@@ -227,11 +260,9 @@
 
     <script>
         const times = ['09:00 - 10:20', '10:30 - 11:50', '12:10 - 13:30', '13:40 - 15:00', '15:10 - 16:30'];
-        // 5 qator, 7 kun uchun bo'sh massiv yaratish
         let scheduleData = Array(5).fill().map(() => Array(7).fill(null));
         let currentRow = -1, currentCol = -1;
 
-        // Jadvalni chizish funksiyasi
         function renderTable() {
             const tbody = document.getElementById('schedule-body');
             tbody.innerHTML = '';
@@ -239,13 +270,11 @@
             for (let i = 0; i < 5; i++) {
                 const tr = document.createElement('tr');
                 
-                // Juftlik ustuni
                 const tdJuftlik = document.createElement('td');
                 tdJuftlik.className = 'juftlik-col';
                 tdJuftlik.textContent = `${i + 1}-juftlik`;
                 tr.appendChild(tdJuftlik);
 
-                // Kunlar ustunlari
                 for (let j = 0; j < 7; j++) {
                     const td = document.createElement('td');
                     td.className = 'editable-cell';
@@ -269,7 +298,6 @@
             }
         }
 
-        // Modalni ochish
         function openModal(r, c) {
             currentRow = r;
             currentCol = c;
@@ -281,14 +309,13 @@
             document.getElementById('m-teacher').value = data.teacher || '';
             
             document.getElementById('modal').style.display = 'flex';
+            document.getElementById('m-subject').focus();
         }
 
-        // Modalni yopish
         function closeModal() {
             document.getElementById('modal').style.display = 'none';
         }
 
-        // Kiritilgan ma'lumotni saqlash
         function saveCell() {
             const subject = document.getElementById('m-subject').value.trim();
             if (subject) {
@@ -305,14 +332,22 @@
             renderTable();
         }
 
-        // Katakni tozalash
         function clearCell() {
             scheduleData[currentRow][currentCol] = null;
             closeModal();
             renderTable();
         }
 
-        // Rasmga yuklab olish funksiyasi (html2canvas yordamida)
+        document.addEventListener('keydown', function(event) {
+            const modal = document.getElementById('modal');
+            if (event.key === 'Enter' && modal.style.display === 'flex') {
+                saveCell();
+            }
+            if (event.key === 'Escape' && modal.style.display === 'flex') {
+                closeModal();
+            }
+        });
+
         function downloadPNG() {
             const captureArea = document.getElementById('capture-area');
             const downloadBtn = document.querySelector('.btn-download');
@@ -321,13 +356,12 @@
             downloadBtn.style.opacity = '0.7';
 
             html2canvas(captureArea, {
-                scale: 2, // Yuqori sifat (HD) uchun
+                scale: 2, 
                 backgroundColor: '#f0f4f8',
                 useCORS: true
             }).then(canvas => {
                 const link = document.createElement('a');
-                // Fayl nomi sifatida sarlavhadagi guruh nomini olish
-                const groupName = document.querySelector('.header-title').innerText.replace(/[^a-zA-Z0-9-]/g, '_');
+                const groupName = document.getElementById('group-title').innerText.replace(/[^a-zA-Z0-9-]/g, '_');
                 link.download = `${groupName}_dars_jadvali.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
@@ -337,7 +371,6 @@
             });
         }
 
-        // Dastlab sahifa yuklanganda jadvalni chizish
         window.onload = renderTable;
     </script>
 </body>
