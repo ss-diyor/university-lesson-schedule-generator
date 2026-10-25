@@ -193,6 +193,36 @@
         .btn-save { background: #10b981; color: white; }
         .btn-cancel { background: #e2e8f0; color: #475569; }
         .btn-clear { background: #ef4444; color: white; margin-right: auto; }
+
+        /* Yaratuvchi bilan bog'lanish (Footer qismi) */
+        .footer {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #475569;
+        }
+        
+        .btn-telegram {
+            background-color: #27A7E7;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-color 0.2s;
+            box-shadow: 0 2px 4px rgba(39, 167, 231, 0.2);
+        }
+
+        .btn-telegram:hover {
+            background-color: #1c8ac2;
+        }
     </style>
 </head>
 <body>
@@ -203,7 +233,7 @@
             <label for="group-name-input">Guruh nomini kiriting:</label>
             <input type="text" id="group-name-input" value="XTA-26/5" oninput="document.getElementById('group-title').innerText = this.value || 'Guruh nomi'">
         </div>
-        <button class="btn-download" onclick="downloadPNG()">↓ PNG formatida yuklab olish</button>
+        <button class="btn-download" onclick="downloadPNG()">PNG formatida yuklab olish</button>
     </div>
 
     <!-- Shu qism rasmga olinadi -->
@@ -228,6 +258,17 @@
                 <!-- Javascript orqali to'ldiriladi -->
             </tbody>
         </table>
+    </div>
+
+    <!-- Footer: Yaratuvchi bilan bog'lanish -->
+    <div class="footer">
+        <span>Yaratuvchi bilan bog'lanish:</span>
+        <a href="https://t.me/m/8GEnyEs6Mzcy" target="_blank" class="btn-telegram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21.1402 3.12574C21.1402 3.12574 23.336 2.21731 23.1531 4.39803C23.0617 5.30664 22.2384 10.395 21.6896 15.2107L20.2263 21.8437C20.2263 21.8437 20.0434 23.2975 18.7631 23.4793C17.4827 23.6611 15.4705 22.3888 15.1047 22.0254L9.80004 17.664L7.51351 19.8447C7.51351 19.8447 6.87327 20.4808 6.59888 19.6631C6.32449 18.8454 5.31835 15.756 5.31835 15.756L1.84275 14.6657C1.84275 14.6657 0.562303 14.3022 0.653765 13.3936C0.745227 12.485 1.93421 12.0307 1.93421 12.0307L21.1402 3.12574ZM18.5802 6.5786C18.5802 6.5786 17.5741 5.67005 16.6595 6.30609L7.42205 12.6667L9.06834 16.5739L17.2082 8.941C17.2082 8.941 18.0314 8.03244 18.5802 6.5786Z" fill="white"/>
+            </svg>
+            Telegram
+        </a>
     </div>
 
     <!-- Tahrirlash oynasi (Modal) -->
@@ -366,7 +407,7 @@
                 link.href = canvas.toDataURL('image/png');
                 link.click();
                 
-                downloadBtn.textContent = '↓ PNG formatida yuklab olish';
+                downloadBtn.textContent = 'PNG formatida yuklab olish';
                 downloadBtn.style.opacity = '1';
             });
         }
